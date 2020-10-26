@@ -14,6 +14,10 @@ discordClient.once('ready', () => {
 discordClient.on('messageReactionAdd', (messageReaction, user) => {
     if (messageReaction && user && messageReaction.message && messageReaction.emoji && user.id && !user.bot) {
         let params = {
+            ExpressionAttributeNames: {
+                '#c': 'count',
+                '#lu': 'lastUsed'
+            },
             ExpressionAttributeValues: {
                 ':c': {
                     N: '1'
@@ -37,7 +41,7 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
                 }
             },
             TableName: config.awsDynamoDBTableName,
-            UpdateExpression: 'SET count = count + :c, lastUsed = :lu',
+            UpdateExpression: 'SET #c = #c + :c, #lu = :lu',
         };
         dynamo.updateItem(params, function(err, data){
             if (err) {
@@ -50,6 +54,9 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
 discordClient.on('messageReactionRemove', (messageReaction, user) => {
     if (messageReaction && user && messageReaction.message && messageReaction.emoji && user.id && !user.bot) {
         let params = {
+            ExpressionAttributeNames: {
+                '#c': 'count'
+            },
             ExpressionAttributeValues: {
                 ':c': {
                     N: '1'
@@ -70,8 +77,8 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
                 }
             },
             TableName: config.awsDynamoDBTableName,
-            UpdateExpression: 'SET count = count - :c',
-            ConditionExpression: 'count >= 1'
+            UpdateExpression: 'SET #c = #c - :c',
+            ConditionExpression: '#c >= 1'
         };
         dynamo.updateItem(params, function(err, data){
             if (err) {
