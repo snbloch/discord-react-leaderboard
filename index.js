@@ -37,7 +37,7 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
                 }
             },
             TableName: config.awsDynamoDBTableName,
-            UpdateExpression: 'SET count = count + :c, SET lastUsed = :lu',
+            UpdateExpression: 'SET count = count + :c, lastUsed = :lu',
         };
         dynamo.updateItem(params, function(err, data){
             if (err) {
