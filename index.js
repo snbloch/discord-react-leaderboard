@@ -12,7 +12,7 @@ discordClient.once('ready', () => {
 });
 
 discordClient.on('messageReactionAdd', (messageReaction, user) => {
-    if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot) {
+    if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.emoji.id && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot) {
         let params = {
             ExpressionAttributeNames: {
                 '#c': 'count',
@@ -31,7 +31,7 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
             }, 
             Key: {
                 reactionKey: {
-                    S: messageReaction.message.guild.id + '#' + user.id + '#' + messageReaction.message.channel.id + '#' + messageReaction.emoji.id
+                    S: messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + user.id + '#' + messageReaction.emoji.id
                 }
             },
             TableName: config.awsDynamoDBTableName,
@@ -46,7 +46,7 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
 });
 
 discordClient.on('messageReactionRemove', (messageReaction, user) => {
-    if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot) {
+    if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.emoji.id && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot) {
         let params = {
             ExpressionAttributeNames: {
                 '#c': 'count'
@@ -58,7 +58,7 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
             }, 
             Key: {
                 reactionKey: {
-                    S: messageReaction.message.guild.id + '#' + user.id + '#' + messageReaction.message.channel.id + '#' + messageReaction.emoji.id
+                    S: messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + user.id + '#' + messageReaction.emoji.id
                 }
             },
             TableName: config.awsDynamoDBTableName,
