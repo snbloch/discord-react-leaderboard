@@ -19,11 +19,14 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
                 '#lu': 'lastUsed'
             },
             ExpressionAttributeValues: {
-                ':c': {
+                ':incr': {
                     N: '1'
                 },
                 ':lu': {
                     S: new Date().toString()
+                },
+                ':zero': {
+                    N: '0'
                 }
             }, 
             Key: {
@@ -32,7 +35,7 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
                 }
             },
             TableName: config.awsDynamoDBTableName,
-            UpdateExpression: 'SET #c = #c + :c, #lu = :lu',
+            UpdateExpression: 'SET #c = if_not_exists(#c, :zero) + :incr, #lu = :lu',
         };
         dynamo.updateItem(params, function(err, data){
             if (err) {
@@ -49,7 +52,7 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
                 '#c': 'count'
             },
             ExpressionAttributeValues: {
-                ':c': {
+                ':decr': {
                     N: '1'
                 }
             }, 
@@ -59,8 +62,8 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
                 }
             },
             TableName: config.awsDynamoDBTableName,
-            UpdateExpression: 'SET #c = #c - :c',
-            ConditionExpression: '#c >= 1'
+            UpdateExpression: 'SET #c = #c - :decr',
+            ConditionExpression: '#c >= :decr'
         };
         dynamo.updateItem(params, function(err, data){
             if (err) {
