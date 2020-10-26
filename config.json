@@ -1,0 +1,6 @@
+{
+    "awsProfileName": "AWS_PROFILE",
+    "awsDynamoDBTableName": "TABLE_NAME",
+    "awsRegion": "REGION_ID",
+    "discordToken": "DISCORD_BOT_TOKEN"
+}
