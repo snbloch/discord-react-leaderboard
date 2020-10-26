@@ -32,7 +32,7 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
                 discordChannelId: {
                     S: messageReaction.message.channel.id
                 },
-                emojiName: {
+                emojiId: {
                     S: messageReaction.emoji.id
                 }
             },
@@ -65,7 +65,7 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
                 discordChannelId: {
                     S: messageReaction.message.channel.id
                 },
-                emojiName: {
+                emojiId: {
                     S: messageReaction.emoji.id
                 }
             },
@@ -81,4 +81,4 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
     }
 });
 
-discordClient.login(config.token);
+discordClient.login(config.discordToken);
