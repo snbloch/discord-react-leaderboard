@@ -19,7 +19,7 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
                     N: '1'
                 },
                 ':lu': {
-                    S: new Date()
+                    S: new Date().toString()
                 }
             }, 
             Key: {
