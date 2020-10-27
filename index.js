@@ -214,7 +214,7 @@ discordClient.on('message', message => {
             else if (data && data.Items && data.Items.length) {
                 response = []; 
                 for (let i = 0; i < data.Items.length; i++) {
-                    let unmarshalled = new dynamo.Converter.unmarshall(data.Items[i]);
+                    let unmarshalled = new AWS.DynamoDB.Converter.unmarshall(data.Items[i]);
                     response.push({id: unmarshalled.subKey, count: unmarshalled.itemCount});
                 } 
             }
@@ -239,7 +239,7 @@ discordClient.on('message', message => {
                 else if (data && data.Items && data.Items.length) {
                     response = []; 
                     for (let i = 0; i < data.Items.length; i++) {
-                        let unmarshalled = new dynamo.Converter.unmarshall(data.Items[i]);
+                        let unmarshalled = new AWS.DynamoDB.Converter.unmarshall(data.Items[i]);
                         response.push({id: unmarshalled.subKey, count: unmarshalled.itemCount});
                     } 
                 }
@@ -264,7 +264,7 @@ discordClient.on('message', message => {
                 else if (data && data.Items && data.Items.length) {
                     response = []; 
                     for (let i = 0; i < data.Items.length; i++) {
-                        let unmarshalled = new dynamo.Converter.unmarshall(data.Items[i]);
+                        let unmarshalled = new AWS.DynamoDB.Converter.unmarshall(data.Items[i]);
                         response.push({id: unmarshalled.subKey, count: unmarshalled.itemCount});
                     } 
                 }
