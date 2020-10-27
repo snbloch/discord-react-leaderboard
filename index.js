@@ -17,7 +17,6 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
             ExpressionAttributeNames: {
                 '#ic': 'itemCount',
                 '#lu': 'lastUsed',
-                '#uid': 'userId',
             },
             ExpressionAttributeValues: {
                 ':incr': {
@@ -26,9 +25,6 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
                 ':lu': {
                     S: new Date().toString()
                 },
-                ':uid': {
-                    S: user.id
-                },
                 ':zero': {
                     N: '0'
                 }
@@ -36,10 +32,13 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
             Key: {
                 reactionKey: {
                     S: messageReaction.message.guild.id + '#' + messageReaction.message.channel.id
+                },
+                subKey: {
+                    S: user.id
                 }
             },
             TableName: config.awsDynamoDBTableName,
-            UpdateExpression: 'SET #ic = if_not_exists(#ic, :zero) + :incr, #uid = :uid, #lu = :lu'
+            UpdateExpression: 'SET #ic = if_not_exists(#ic, :zero) + :incr, #lu = :lu'
         };
         dynamo.updateItem(params, function(err, data){
             if (err) {
@@ -48,14 +47,10 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
         });
         params = {
             ExpressionAttributeNames: {
-                '#eid': 'emojiId',
                 '#ic': 'itemCount',
                 '#lu': 'lastUsed'
             },
             ExpressionAttributeValues: {
-                ':eid': {
-                    S: messageReaction.emoji.id
-                },
                 ':incr': {
                     N: '1'
                 },
@@ -69,10 +64,13 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
             Key: {
                 reactionKey: {
                     S: messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + user.id
+                },
+                subKey: {
+                    S: messageReaction.emoji.id
                 }
             },
             TableName: config.awsDynamoDBTableName,
-            UpdateExpression: 'SET #ic = if_not_exists(#ic, :zero) + :incr, #eid = :eid, #lu = :lu'
+            UpdateExpression: 'SET #ic = if_not_exists(#ic, :zero) + :incr, #lu = :lu'
         };
         dynamo.updateItem(params, function(err, data){
             if (err) {
@@ -81,14 +79,10 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
         });
         params = {
             ExpressionAttributeNames: {
-                '#uid': 'userId',
                 '#ic': 'itemCount',
                 '#lu': 'lastUsed'
             },
             ExpressionAttributeValues: {
-                ':uid': {
-                    S: user.id
-                },
                 ':incr': {
                     N: '1'
                 },
@@ -102,10 +96,13 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
             Key: {
                 reactionKey: {
                     S: messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + messageReaction.emoji.id
+                },
+                subKey: {
+                    S: user.id
                 }
             },
             TableName: config.awsDynamoDBTableName,
-            UpdateExpression: 'SET #ic = if_not_exists(#ic, :zero) + :incr, #uid = :uid, #lu = :lu'
+            UpdateExpression: 'SET #ic = if_not_exists(#ic, :zero) + :incr, #lu = :lu'
         };
         dynamo.updateItem(params, function(err, data){
             if (err) {
@@ -119,52 +116,24 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
     if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.emoji.id && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot) {
         let params = {
             ExpressionAttributeNames: {
-                '#ic': 'itemCount',
-                '#uid': 'userId'
-            },
-            ExpressionAttributeValues: {
-                ':decr': {
-                    N: '1'
-                },
-                ':uid': {
-                    S: user.id
-                }
-            }, 
-            Key: {
-                reactionKey: {
-                    S: messageReaction.message.guild.id + '#' + messageReaction.message.channel.id
-                }
-            },
-            TableName: config.awsDynamoDBTableName,
-            UpdateExpression: 'SET #ic = #ic - :decr',
-            ConditionExpression: '#ic >= :decr, #uid = :uid'
-        };
-        dynamo.updateItem(params, function(err, data){
-            if (err) {
-                console.error(err);
-            }
-        });
-        params = {
-            ExpressionAttributeNames: {
-                '#eid': 'emojiId',
                 '#ic': 'itemCount'
             },
             ExpressionAttributeValues: {
                 ':decr': {
                     N: '1'
-                },
-                ':eid': {
-                    S: messageReaction.emoji.id
                 }
             }, 
             Key: {
                 reactionKey: {
-                    S: messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + user.id
+                    S: messageReaction.message.guild.id + '#' + messageReaction.message.channel.id
+                },
+                subKey: {
+                    S: user.id
                 }
             },
             TableName: config.awsDynamoDBTableName,
             UpdateExpression: 'SET #ic = #ic - :decr',
-            ConditionExpression: '#ic >= :decr, #eid = :eid'
+            ConditionExpression: '#ic >= :decr'
         };
         dynamo.updateItem(params, function(err, data){
             if (err) {
@@ -173,25 +142,50 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
         });
         params = {
             ExpressionAttributeNames: {
-                '#ic': 'itemCount',
-                '#uid': 'userId'
+                '#ic': 'itemCount'
             },
             ExpressionAttributeValues: {
                 ':decr': {
                     N: '1'
+                }
+            }, 
+            Key: {
+                reactionKey: {
+                    S: messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + user.id
                 },
-                ':uid': {
-                    S: user.id
+                subKey: {
+                    S: messageReaction.emoji.id
+                }
+            },
+            TableName: config.awsDynamoDBTableName,
+            UpdateExpression: 'SET #ic = #ic - :decr',
+            ConditionExpression: '#ic >= :decr'
+        };
+        dynamo.updateItem(params, function(err, data){
+            if (err) {
+                console.error(err);
+            }
+        });
+        params = {
+            ExpressionAttributeNames: {
+                '#ic': 'itemCount'
+            },
+            ExpressionAttributeValues: {
+                ':decr': {
+                    N: '1'
                 }
             }, 
             Key: {
                 reactionKey: {
                     S: messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + messageReaction.emoji.id
+                },
+                subKey: {
+                    S: user.id
                 }
             },
             TableName: config.awsDynamoDBTableName,
             UpdateExpression: 'SET #ic = #ic - :decr',
-            ConditionExpression: '#ic >= :decr, #uid = :uid'
+            ConditionExpression: '#ic >= :decr'
         };
         dynamo.updateItem(params, function(err, data){
             if (err) {
