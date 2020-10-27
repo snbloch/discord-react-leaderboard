@@ -195,4 +195,52 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
     }
 });
 
+discordClient.on('message', message => {
+    if (message && message.guild && message.guild.id && message.content && message.channel && message.channel.id && message.content.toLowerCase().trim() === '!reacts') {
+        let params = {
+            KeyConditionExpression: 'reactionKey = ' + messageReaction.message.guild.id + '#' + messageReaction.message.channel.id,
+            TableName: config.awsDynamoDBTableName
+        };
+        dynamodb.query(params, function(err, data) {
+            if (err) {
+                console.error(err);
+            }
+            else {
+                console.log(data); 
+            }
+        });
+    }
+    else if (message && message.guild && message.guild.id && message.content && message.channel && message.channel.id && message.content.toLowerCase().startsWith('!reacts')) {
+        if (message.mentions && message.mentions.users && message.mentions.users.first()) {
+            let params = {
+                KeyConditionExpression: 'reactionKey = ' + messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + message.mentions.users.first().id,
+                TableName: config.awsDynamoDBTableName
+            };
+            dynamodb.query(params, function(err, data) {
+                if (err) {
+                    console.error(err);
+                }
+                else {
+                    console.log(data); 
+                }
+            });
+        }
+        else if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)) {
+            let emojiId = message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)[0].match(/\d+/);
+            let params = {
+                KeyConditionExpression: 'reactionKey = ' + messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + emojiId,
+                TableName: config.awsDynamoDBTableName
+            };
+            dynamodb.query(params, function(err, data) {
+                if (err) {
+                    console.error(err);
+                }
+                else {
+                    console.log(data); 
+                }
+            });
+        }
+    }
+});
+
 discordClient.login(config.discordToken);
