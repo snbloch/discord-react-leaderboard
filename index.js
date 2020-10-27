@@ -86,7 +86,7 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
 });
 
 discordClient.on('messageReactionRemove', (messageReaction, user) => {
-    if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.emoji.id && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot && messageReaction.guild.emojis.resolve(messageReaction.emoji.id)) {
+    if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.emoji.id && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot && messageReaction.message.guild.emojis.resolve(messageReaction.emoji.id)) {
         let params = {
             ExpressionAttributeNames: {
                 '#ic': 'itemCount'
