@@ -174,12 +174,12 @@ discordClient.on('message', message => {
                 let responseMessage;
                 if (response.length) {
                     response = response.slice(0,PAGE_SIZE);
-                    responseMessage = `${message.guild.name} react leaderboard\n
-                                        users with most reacts in #${message.channel.name}\n
-                                        ---------------------------\n`;
+                    responseMessage = `${message.guild.name} react leaderboard\n`;
+                    responseMessage += `users with most reacts in #${message.channel.name}\n`;
+                    responseMessage += `---------------------------\n`;
                     let userCount = 1;
                     for (let i = 0; i < response.length; i++) {
-                        responseMessage += `${userCount}. ${response[i].user}\tCount: ${response[i].count}\n`;
+                        responseMessage += `${userCount}. ${response[i].user}\t|\tCount: ${response[i].count}\n`;
                         userCount += 1;
                     }
                     responseMessage += `---------------------------`;
