@@ -148,7 +148,6 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
 });
 
 discordClient.on('message', message => {
-    let response;
     if (message && message.guild && message.guild.id && message.content && message.channel && message.channel.id && message.content.toLowerCase().trim() === '!reacts') {
         let params = {
             ExpressionAttributeValues: {
@@ -162,7 +161,8 @@ discordClient.on('message', message => {
                 console.error(err);
             }
             else {
-                response = [...data.Items];
+                data.Items.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
+                console.log(data.Items);
             }
         });
         message.delete();
@@ -181,7 +181,8 @@ discordClient.on('message', message => {
                     console.error(err);
                 }
                 else {
-                    response = [...data.Items];
+                    data.Items.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
+                    console.log(data.Items);
                 }
             });
             message.delete();
@@ -200,15 +201,12 @@ discordClient.on('message', message => {
                     console.error(err);
                 }
                 else {
-                    response = [...data.Items];
+                    data.Items.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
+                    console.log(data.Items);
                 }
             });
             message.delete();
         }
-    }
-    if (response) {
-        response.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
-        console.log(response);
     }
 });
 
