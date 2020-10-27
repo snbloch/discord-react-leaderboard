@@ -206,8 +206,10 @@ discordClient.on('message', message => {
             message.delete();
         }
     }
-    response.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
-    console.log(response);
+    if (response) {
+        response.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
+        console.log(response);
+    }
 });
 
 discordClient.login(config.discordToken);
