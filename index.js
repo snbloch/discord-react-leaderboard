@@ -15,7 +15,7 @@ discordClient.once('ready', () => {
 });
 
 discordClient.on('messageReactionAdd', (messageReaction, user) => {
-    if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.emoji.id && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot && messageReaction.message.guild.emojis.resolve(messageReaction.emoji.id).identifier) {
+    if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.emoji.id && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot) {
         console.log(messageReaction);
         console.log(messageReaction.message);
         console.log(messageReaction.message.guild);
