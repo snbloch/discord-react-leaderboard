@@ -203,7 +203,7 @@ discordClient.on('message', message => {
             message.delete();
         }
         else if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)) {
-            let emojiId = message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)[0].match(/\d+/);
+            let emojiId = message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)[0].match(/\d+/)[0].toString();
             let params = {
                 ExpressionAttributeValues: {
                     ':rk': message.guild.id + '#' + message.channel.id + '#' + emojiId
