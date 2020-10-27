@@ -7,6 +7,9 @@ AWS.config.credentials = credentials;
 AWS.config.region = config.awsRegion;
 const dynamo = new AWS.DynamoDB.DocumentClient();
 
+const PAGE_SIZE = 10;
+const MAX_PAGES = 1;
+
 discordClient.once('ready', () => {
     console.log('Ready!');
 });
@@ -162,7 +165,13 @@ discordClient.on('message', message => {
             }
             else {
                 data.Items.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
-                console.log(data.Items);
+                let response = [];
+                for (let i = 0; i < data.Items.length; i++) {
+                    if (message.guild.members.resolve(data.Items[i].subKey)) {
+                        response.push({user: message.guild.members.resolve(data.Items[i].subKey).user.tag, count: data.Items[i].itemCount});
+                    }
+                }
+                console.log(response.slice(0,PAGE_SIZE));
             }
         });
         message.delete();
@@ -182,7 +191,13 @@ discordClient.on('message', message => {
                 }
                 else {
                     data.Items.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
-                    console.log(data.Items);
+                    let response = [];
+                    for (let i = 0; i < data.Items.length; i++) {
+                        if (message.guild.members.resolve(message.mentions.users.first().id) && message.guild.emojis.resolve(data.Items[i].subKey)) {
+                            response.push({emoji: message.guild.emojis.resolve(data.Items[i].subKey).identifier, count: data.Items[i].itemCount});
+                        }
+                    }
+                    console.log(response.slice(0,PAGE_SIZE));
                 }
             });
             message.delete();
@@ -202,7 +217,13 @@ discordClient.on('message', message => {
                 }
                 else {
                     data.Items.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
-                    console.log(data.Items);
+                    let response = [];
+                    for (let i = 0; i < data.Items.length; i++) {
+                        if (message.guild.emojis.resolve(emojiId) && message.guild.members.resolve(data.Items[i].subKey)) {
+                            response.push({user: message.guild.members.resolve(data.Items[i].subKey).user.tag, count: data.Items[i].itemCount});
+                        }
+                    }
+                    console.log(response.slice(0,PAGE_SIZE));
                 }
             });
             message.delete();
