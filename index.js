@@ -198,7 +198,7 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
 discordClient.on('message', message => {
     if (message && message.guild && message.guild.id && message.content && message.channel && message.channel.id && message.content.toLowerCase().trim() === '!reacts') {
         let params = {
-            KeyConditionExpression: 'reactionKey = ' + message.guild.id + '#' + message.channel.id,
+            KeyConditionExpression: 'reactionKey = :' + message.guild.id + '#' + message.channel.id,
             TableName: config.awsDynamoDBTableName
         };
         dynamo.query(params, function(err, data) {
@@ -213,7 +213,7 @@ discordClient.on('message', message => {
     else if (message && message.guild && message.guild.id && message.content && message.channel && message.channel.id && message.content.toLowerCase().startsWith('!reacts')) {
         if (message.mentions && message.mentions.users && message.mentions.users.first()) {
             let params = {
-                KeyConditionExpression: 'reactionKey = ' + message.guild.id + '#' + message.channel.id + '#' + message.mentions.users.first().id,
+                KeyConditionExpression: 'reactionKey = :' + message.guild.id + '#' + message.channel.id + '#' + message.mentions.users.first().id,
                 TableName: config.awsDynamoDBTableName
             };
             dynamo.query(params, function(err, data) {
@@ -228,7 +228,7 @@ discordClient.on('message', message => {
         else if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)) {
             let emojiId = message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)[0].match(/\d+/);
             let params = {
-                KeyConditionExpression: 'reactionKey = ' + message.guild.id + '#' + message.channel.id + '#' + emojiId,
+                KeyConditionExpression: 'reactionKey = :' + message.guild.id + '#' + message.channel.id + '#' + emojiId,
                 TableName: config.awsDynamoDBTableName
             };
             dynamo.query(params, function(err, data) {
