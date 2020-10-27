@@ -201,7 +201,7 @@ discordClient.on('message', message => {
             KeyConditionExpression: 'reactionKey = ' + message.guild.id + '#' + message.channel.id,
             TableName: config.awsDynamoDBTableName
         };
-        dynamodb.query(params, function(err, data) {
+        dynamo.query(params, function(err, data) {
             if (err) {
                 console.error(err);
             }
@@ -216,7 +216,7 @@ discordClient.on('message', message => {
                 KeyConditionExpression: 'reactionKey = ' + message.guild.id + '#' + message.channel.id + '#' + message.mentions.users.first().id,
                 TableName: config.awsDynamoDBTableName
             };
-            dynamodb.query(params, function(err, data) {
+            dynamo.query(params, function(err, data) {
                 if (err) {
                     console.error(err);
                 }
@@ -231,7 +231,7 @@ discordClient.on('message', message => {
                 KeyConditionExpression: 'reactionKey = ' + message.guild.id + '#' + message.channel.id + '#' + emojiId,
                 TableName: config.awsDynamoDBTableName
             };
-            dynamodb.query(params, function(err, data) {
+            dynamo.query(params, function(err, data) {
                 if (err) {
                     console.error(err);
                 }
