@@ -171,7 +171,23 @@ discordClient.on('message', message => {
                         response.push({user: message.guild.members.resolve(data.Items[i].subKey).user.tag, count: data.Items[i].itemCount});
                     }
                 }
-                console.log(response.slice(0,PAGE_SIZE));
+                let responseMessage;
+                if (response.length) {
+                    response = response.slice(0,PAGE_SIZE);
+                    responseMessage = `${message.guild.name} react leaderboard\n
+                                        users with most reacts in #${message.channel.name}\n
+                                        ---------------------------\n`;
+                    let userCount = 1;
+                    for (let i = 0; i < response.length; i++) {
+                        responseMessage += `${userCount}. ${response[i].user}\tCount: ${response[i].count}\n`;
+                        userCount += 1;
+                    }
+                    responseMessage += `---------------------------`;
+                }
+                if (responseMessage) {
+                    console.log(responseMessage);
+                    //message.channel.send(responseMessage);
+                }
             }
         });
         message.delete();
