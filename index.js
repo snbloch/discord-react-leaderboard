@@ -162,7 +162,7 @@ discordClient.on('message', message => {
                 console.error(err);
             }
             else {
-                response = data.Items;
+                response = [...data.Items];
             }
         });
         message.delete();
@@ -181,7 +181,7 @@ discordClient.on('message', message => {
                     console.error(err);
                 }
                 else {
-                    response = data.Items;
+                    response = [...data.Items];
                 }
             });
             message.delete();
@@ -200,7 +200,7 @@ discordClient.on('message', message => {
                     console.error(err);
                 }
                 else {
-                    response = data.Items;
+                    response = [...data.Items];
                 }
             });
             message.delete();
