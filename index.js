@@ -188,8 +188,7 @@ discordClient.on('message', message => {
                     responseMessage += `---------------------------`;
                 }
                 if (responseMessage) {
-                    console.log(responseMessage);
-                    //message.channel.send(responseMessage);
+                    message.channel.send(responseMessage);
                 }
             }
         });
