@@ -167,6 +167,7 @@ discordClient.on('message', message => {
                 data.Items.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
                 let response = [];
                 for (let i = 0; i < data.Items.length; i++) {
+                    discordClient.users.resolve(data.Items[i].subKey);
                     if (message.guild.members.resolve(data.Items[i].subKey) && data.Items[i].itemCount) {
                         response.push({user: message.guild.members.resolve(data.Items[i].subKey).user.tag, count: data.Items[i].itemCount});
                     }
@@ -185,7 +186,8 @@ discordClient.on('message', message => {
                     responseMessage += `---------------------------`;
                 }
                 if (responseMessage) {
-                    message.channel.send(responseMessage);
+                    console.log(responseMessage);
+                    //message.channel.send(responseMessage);
                 }
             }
         });
