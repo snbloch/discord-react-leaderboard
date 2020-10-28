@@ -11,6 +11,9 @@ const PAGE_SIZE = 10;
 const MAX_PAGES = 1;
 
 discordClient.once('ready', () => {
+    discordClient.guilds.cache.forEach(server => {
+        server.members.fetch();
+    });
     console.log('Ready!');
 });
 
@@ -167,7 +170,6 @@ discordClient.on('message', message => {
                 data.Items.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
                 let response = [];
                 for (let i = 0; i < data.Items.length; i++) {
-                    discordClient.users.resolve(data.Items[i].subKey);
                     if (message.guild.members.resolve(data.Items[i].subKey) && data.Items[i].itemCount) {
                         response.push({user: message.guild.members.resolve(data.Items[i].subKey).user.tag, count: data.Items[i].itemCount});
                     }
