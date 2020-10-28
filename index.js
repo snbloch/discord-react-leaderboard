@@ -215,7 +215,22 @@ discordClient.on('message', message => {
                             response.push({emoji: message.guild.emojis.resolve(data.Items[i].subKey).identifier, count: data.Items[i].itemCount});
                         }
                     }
-                    console.log(response.slice(0,PAGE_SIZE));
+                    let responseMessage;
+                    if (response.length) {
+                        response = response.slice(0,PAGE_SIZE);
+                        responseMessage = `${message.guild.name} react leaderboard\n`;
+                        responseMessage += `reactions most used by ${message.mentions.users.first().tag} in #${message.channel.name}\n`;
+                        responseMessage += `---------------------------\n`;
+                        let emojiCount = 1;
+                        for (let i = 0; i < response.length; i++) {
+                            responseMessage += `${emojiCount}. <${response[i].emoji}>\t|\tCount: ${response[i].count}\n`;
+                            emojiCount += 1;
+                        }
+                        responseMessage += `---------------------------`;
+                    }
+                    if (responseMessage) {
+                        message.channel.send(responseMessage);
+                    }
                 }
             });
             message.delete();
@@ -241,7 +256,22 @@ discordClient.on('message', message => {
                             response.push({user: message.guild.members.resolve(data.Items[i].subKey).user.tag, count: data.Items[i].itemCount});
                         }
                     }
-                    console.log(response.slice(0,PAGE_SIZE));
+                    let responseMessage;
+                    if (response.length) {
+                        response = response.slice(0,PAGE_SIZE);
+                        responseMessage = `${message.guild.name} react leaderboard\n`;
+                        responseMessage += `most frequent use of <${message.guild.emojis.resolve(emojiId).identifier}> in #${message.channel.name}\n`;
+                        responseMessage += `---------------------------\n`;
+                        let userCount = 1;
+                        for (let i = 0; i < response.length; i++) {
+                            responseMessage += `${userCount}. ${response[i].user}\t|\tCount: ${response[i].count}\n`;
+                            userCount += 1;
+                        }
+                        responseMessage += `---------------------------`;
+                    }
+                    if (responseMessage) {
+                        message.channel.send(responseMessage);
+                    }
                 }
             });
             message.delete();
