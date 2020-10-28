@@ -212,7 +212,7 @@ discordClient.on('message', message => {
                     let response = [];
                     for (let i = 0; i < data.Items.length; i++) {
                         if (message.guild.members.resolve(message.mentions.users.first().id) && message.guild.emojis.resolve(data.Items[i].subKey) && data.Items[i].itemCount) {
-                            response.push({emoji: message.guild.emojis.resolve(data.Items[i].subKey).identifier, count: data.Items[i].itemCount});
+                            response.push({emoji: message.guild.emojis.resolve(data.Items[i].subKey), count: data.Items[i].itemCount});
                         }
                     }
                     let responseMessage;
@@ -223,7 +223,7 @@ discordClient.on('message', message => {
                         responseMessage += `---------------------------\n`;
                         let emojiCount = 1;
                         for (let i = 0; i < response.length; i++) {
-                            responseMessage += `${emojiCount}. <${response[i].emoji}>\t|\tCount: ${response[i].count}\n`;
+                            responseMessage += `${emojiCount}. ${response[i].emoji}\t|\tCount: ${response[i].count}\n`;
                             emojiCount += 1;
                         }
                         responseMessage += `---------------------------`;
@@ -260,7 +260,7 @@ discordClient.on('message', message => {
                     if (response.length) {
                         response = response.slice(0,PAGE_SIZE);
                         responseMessage = `${message.guild.name} react leaderboard\n`;
-                        responseMessage += `most frequent use of <${message.guild.emojis.resolve(emojiId).identifier}> in #${message.channel.name}\n`;
+                        responseMessage += `most frequent use of ${message.guild.emojis.resolve(emojiId)} in #${message.channel.name}\n`;
                         responseMessage += `---------------------------\n`;
                         let userCount = 1;
                         for (let i = 0; i < response.length; i++) {
