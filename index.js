@@ -6,6 +6,7 @@ var credentials = new AWS.SharedIniFileCredentials({profile: config.awsProfileNa
 AWS.config.credentials = credentials;
 AWS.config.region = config.awsRegion;
 const dynamo = new AWS.DynamoDB.DocumentClient();
+const emojiRegexRGI = require('emoji-regex/RGI_Emoji.js');
 
 const PAGE_SIZE = 10;
 const MAX_PAGES = 1;
@@ -18,7 +19,7 @@ discordClient.once('ready', () => {
 });
 
 discordClient.on('messageReactionAdd', (messageReaction, user) => {
-    if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.emoji.id && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot && messageReaction.message.guild.emojis.resolve(messageReaction.emoji.id)) {
+    if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.emoji.id && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot) {
         let params = {
             ExpressionAttributeNames: {
                 '#ic': 'itemCount',
@@ -111,7 +112,7 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
 });
 
 discordClient.on('messageReactionRemove', (messageReaction, user) => {
-    if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.emoji.id && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot && messageReaction.message.guild.emojis.resolve(messageReaction.emoji.id)) {
+    if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.emoji.id && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot) {
         let params = {
             ExpressionAttributeNames: {
                 '#ic': 'itemCount'
@@ -252,8 +253,8 @@ discordClient.on('message', message => {
                 data.Items.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
                 let response = [];
                 for (let i = 0; i < data.Items.length; i++) {
-                    if (message.guild.emojis.resolve(data.Items[i].subKey) && data.Items[i].itemCount) {
-                        response.push({emoji: message.guild.emojis.resolve(data.Items[i].subKey), count: data.Items[i].itemCount});
+                    if (discordClient.emojis.resolve(data.Items[i].subKey) && data.Items[i].itemCount) {
+                        response.push({emoji: discordClient.emojis.resolve(data.Items[i].subKey), count: data.Items[i].itemCount});
                     }
                 }
                 let responseMessage;
@@ -294,7 +295,7 @@ discordClient.on('message', message => {
                     let response = [];
                     for (let i = 0; i < data.Items.length; i++) {
                         if (message.guild.members.resolve(message.mentions.users.first().id) && message.guild.emojis.resolve(data.Items[i].subKey) && data.Items[i].itemCount) {
-                            response.push({emoji: message.guild.emojis.resolve(data.Items[i].subKey), count: data.Items[i].itemCount});
+                            response.push({emoji: discordClient.emojis.resolve(data.Items[i].subKey), count: data.Items[i].itemCount});
                         }
                     }
                     let responseMessage;
@@ -317,8 +318,14 @@ discordClient.on('message', message => {
             });
             message.delete();
         }
-        else if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)) {
-            let emojiId = message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)[0].match(/\d+/)[0].toString();
+        else if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/) || emojiRegexRGI().exec(message.content).length) {
+            let emojiId;
+            if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)) {
+                emojiId = message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)[0].match(/\d+/)[0].toString();
+            }
+            else {
+                emojiId = emojiRegexRGI().exec(message.content)[0];
+            }
             let params = {
                 ExpressionAttributeValues: {
                     ':rk': 'userByEmoji#' + message.guild.id + '#' + message.channel.id + '#' + emojiId
@@ -334,7 +341,7 @@ discordClient.on('message', message => {
                     data.Items.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
                     let response = [];
                     for (let i = 0; i < data.Items.length; i++) {
-                        if (message.guild.emojis.resolve(emojiId) && message.guild.members.resolve(data.Items[i].subKey) && data.Items[i].itemCount) {
+                        if (discordClient.emojis.resolve(emojiId) && message.guild.members.resolve(data.Items[i].subKey) && data.Items[i].itemCount) {
                             response.push({user: message.guild.members.resolve(data.Items[i].subKey).user.tag, count: data.Items[i].itemCount});
                         }
                     }
