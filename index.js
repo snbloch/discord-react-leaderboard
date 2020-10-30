@@ -332,7 +332,7 @@ discordClient.on('message', message => {
             });
             message.delete();
         }
-        else if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/) || emojiRegexRGI().exec(message.content).length) {
+        else if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/) || emojiRegexRGI().exec(message.content)) {
             let emojiId;
             if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)) {
                 emojiId = message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)[0].match(/\d+/)[0].toString();
