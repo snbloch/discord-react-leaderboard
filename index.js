@@ -553,7 +553,7 @@ discordClient.on('message', message => {
             });
             message.delete();
         }
-        else if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/) || emojiRegexRGI().exec(message.content) && !message.content.trim().endsWith('received')) {
+        else if ((message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/) || emojiRegexRGI().exec(message.content)) && !message.content.trim().endsWith('received')) {
             let customEmoji;
             let emojiId;
             if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)) {
@@ -609,7 +609,7 @@ discordClient.on('message', message => {
             });
             message.delete();
         }
-        else if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/) || emojiRegexRGI().exec(message.content) && message.content.trim().endsWith('received')) {
+        else if ((message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/) || emojiRegexRGI().exec(message.content)) && message.content.trim().endsWith('received')) {
             let customEmoji;
             let emojiId;
             if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)) {
