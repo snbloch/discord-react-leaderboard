@@ -338,7 +338,7 @@ discordClient.on('message', message => {
                 emojiId = message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)[0].match(/\d+/)[0].toString();
             }
             else {
-                emojiId = emojiRegexRGI().exec(message.content)[0];
+                emojiId = emojiRegexRGI().exec(message.content)[0].toString();
             }
             let params = {
                 ExpressionAttributeValues: {
@@ -363,7 +363,7 @@ discordClient.on('message', message => {
                     if (response.length) {
                         response = response.slice(0,PAGE_SIZE);
                         responseMessage = `${message.guild.name} react leaderboard\n`;
-                        responseMessage += `most frequent use of ${message.guild.emojis.resolve(emojiId)} in #${message.channel.name}\n`;
+                        responseMessage += `most frequent use of ${discordClient.emojis.resolve(emojiId)} in #${message.channel.name}\n`;
                         responseMessage += `---------------------------\n`;
                         let userCount = 1;
                         for (let i = 0; i < response.length; i++) {
