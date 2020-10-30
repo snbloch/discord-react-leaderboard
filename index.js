@@ -333,12 +333,14 @@ discordClient.on('message', message => {
             message.delete();
         }
         else if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/) || emojiRegexRGI().exec(message.content)) {
+            let customEmoji;
             let emojiId;
             if (message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)) {
+                customEmoji = true;
                 emojiId = message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/)[0].match(/\d+/)[0].toString();
             }
             else {
-                emojiId = emojiRegexRGI().exec(message.content)[0].toString();
+                emojiId = emojiRegexRGI().exec(message.content)[0];
             }
             let params = {
                 ExpressionAttributeValues: {
@@ -354,8 +356,15 @@ discordClient.on('message', message => {
                 else {
                     data.Items.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
                     let response = [];
+                    let emojiObject;
+                    if (customEmoji) {
+                        emojiObject = discordClient.emojis.resolve(emojiId);
+                    }
+                    else {
+                        emojiObject = emojiId.toString();
+                    }
                     for (let i = 0; i < data.Items.length; i++) {
-                        if (discordClient.emojis.resolve(emojiId) && message.guild.members.resolve(data.Items[i].subKey) && data.Items[i].itemCount) {
+                        if (emojiObject && message.guild.members.resolve(data.Items[i].subKey) && data.Items[i].itemCount) {
                             response.push({user: message.guild.members.resolve(data.Items[i].subKey).user.tag, count: data.Items[i].itemCount});
                         }
                     }
@@ -363,7 +372,7 @@ discordClient.on('message', message => {
                     if (response.length) {
                         response = response.slice(0,PAGE_SIZE);
                         responseMessage = `${message.guild.name} react leaderboard\n`;
-                        responseMessage += `most frequent use of ${discordClient.emojis.resolve(emojiId)} in #${message.channel.name}\n`;
+                        responseMessage += `most frequent use of ${emojiObject} in #${message.channel.name}\n`;
                         responseMessage += `---------------------------\n`;
                         let userCount = 1;
                         for (let i = 0; i < response.length; i++) {
