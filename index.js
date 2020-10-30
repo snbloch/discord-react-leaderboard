@@ -267,8 +267,13 @@ discordClient.on('message', message => {
                 data.Items.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
                 let response = [];
                 for (let i = 0; i < data.Items.length; i++) {
-                    if (discordClient.emojis.resolve(data.Items[i].subKey) && data.Items[i].itemCount) {
-                        response.push({emoji: discordClient.emojis.resolve(data.Items[i].subKey), count: data.Items[i].itemCount});
+                    if ((discordClient.emojis.resolve(data.Items[i].subKey) || emojiRegexRGI().exec(data.Items[i].subKey)) && data.Items[i].itemCount) {
+                        if (discordClient.emojis.resolve(data.Items[i].subKey)) {
+                            response.push({emoji: discordClient.emojis.resolve(data.Items[i].subKey), count: data.Items[i].itemCount});
+                        }
+                        else {
+                            response.push({emoji: emojiRegexRGI().exec(data.Items[i].subKey)[0].toString(), count: data.Items[i].itemCount});
+                        }
                     }
                 }
                 let responseMessage;
@@ -308,8 +313,13 @@ discordClient.on('message', message => {
                     data.Items.sort((a, b) => (a.itemCount < b.itemCount) ? 1 : -1);
                     let response = [];
                     for (let i = 0; i < data.Items.length; i++) {
-                        if (message.guild.members.resolve(message.mentions.users.first().id) && message.guild.emojis.resolve(data.Items[i].subKey) && data.Items[i].itemCount) {
-                            response.push({emoji: discordClient.emojis.resolve(data.Items[i].subKey), count: data.Items[i].itemCount});
+                        if (message.guild.members.resolve(message.mentions.users.first().id) && (discordClient.emojis.resolve(data.Items[i].subKey) || emojiRegexRGI().exec(data.Items[i].subKey)) && data.Items[i].itemCount) {
+                            if (discordClient.emojis.resolve(data.Items[i].subKey)) {
+                                response.push({emoji: discordClient.emojis.resolve(data.Items[i].subKey), count: data.Items[i].itemCount});
+                            }
+                            else {
+                                response.push({emoji: emojiRegexRGI().exec(data.Items[i].subKey)[0].toString(), count: data.Items[i].itemCount});
+                            }
                         }
                     }
                     let responseMessage;
