@@ -281,7 +281,7 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
                 ':decr': 1
             }, 
             Key: {
-                reactionKey: 'emojiByUserReceived#' + messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + messageReacction.message.author.id,
+                reactionKey: 'emojiByUserReceived#' + messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + messageReaction.message.author.id,
                 subKey: emojiId
             },
             TableName: config.awsDynamoDBTableName,
