@@ -19,7 +19,14 @@ discordClient.once('ready', () => {
 });
 
 discordClient.on('messageReactionAdd', (messageReaction, user) => {
-    if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.emoji.id && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot) {
+    if (messageReaction && user && messageReaction.message && messageReaction.emoji && (messageReaction.emoji.id || messageReaction.emoji.name) && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot) {
+        let emojiId;
+        if (messageReaction.emoji.id) {
+            emojiId = messageReaction.emoji.id;
+        }
+        else {
+            emojiId = messageReaction.emoji.name;
+        }
         let params = {
             ExpressionAttributeNames: {
                 '#ic': 'itemCount',
@@ -54,7 +61,7 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
             }, 
             Key: {
                 reactionKey: 'emojiByChannel#' + messageReaction.message.guild.id + '#' + messageReaction.message.channel.id,
-                subKey: messageReaction.emoji.id
+                subKey: emojiId
             },
             TableName: config.awsDynamoDBTableName,
             UpdateExpression: 'SET #ic = if_not_exists(#ic, :zero) + :incr, #lu = :lu'
@@ -76,7 +83,7 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
             }, 
             Key: {
                 reactionKey: 'emojiByUser#' + messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + user.id,
-                subKey: messageReaction.emoji.id
+                subKey: emojiId
             },
             TableName: config.awsDynamoDBTableName,
             UpdateExpression: 'SET #ic = if_not_exists(#ic, :zero) + :incr, #lu = :lu'
@@ -97,7 +104,7 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
                 ':zero': 0
             }, 
             Key: {
-                reactionKey: 'userByEmoji#' + messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + messageReaction.emoji.id,
+                reactionKey: 'userByEmoji#' + messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + emojiId,
                 subKey: user.id
             },
             TableName: config.awsDynamoDBTableName,
@@ -112,7 +119,14 @@ discordClient.on('messageReactionAdd', (messageReaction, user) => {
 });
 
 discordClient.on('messageReactionRemove', (messageReaction, user) => {
-    if (messageReaction && user && messageReaction.message && messageReaction.emoji && messageReaction.emoji.id && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot) {
+    if (messageReaction && user && messageReaction.message && messageReaction.emoji && (messageReaction.emoji.id || messageReaction.emoji.name) && messageReaction.message.author && !messageReaction.message.author.bot && user.id && !user.bot) {
+        let emojiId;
+        if (messageReaction.emoji.id) {
+            emojiId = messageReaction.emoji.id;
+        }
+        else {
+            emojiId = messageReaction.emoji.name;
+        }
         let params = {
             ExpressionAttributeNames: {
                 '#ic': 'itemCount'
@@ -142,7 +156,7 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
             }, 
             Key: {
                 reactionKey: 'emojiByChannel#' + messageReaction.message.guild.id + '#' + messageReaction.message.channel.id,
-                subKey: messageReaction.emoji.id
+                subKey: emojiId
             },
             TableName: config.awsDynamoDBTableName,
             UpdateExpression: 'SET #ic = #ic - :decr',
@@ -162,7 +176,7 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
             }, 
             Key: {
                 reactionKey: 'emojiByUser#' + messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + user.id,
-                subKey: messageReaction.emoji.id
+                subKey: emojiId
             },
             TableName: config.awsDynamoDBTableName,
             UpdateExpression: 'SET #ic = #ic - :decr',
@@ -181,7 +195,7 @@ discordClient.on('messageReactionRemove', (messageReaction, user) => {
                 ':decr': 1
             }, 
             Key: {
-                reactionKey: 'userByEmoji#' + messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + messageReaction.emoji.id,
+                reactionKey: 'userByEmoji#' + messageReaction.message.guild.id + '#' + messageReaction.message.channel.id + '#' + emojiId,
                 subKey: user.id
             },
             TableName: config.awsDynamoDBTableName,
