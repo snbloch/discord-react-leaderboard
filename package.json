@@ -9,8 +9,8 @@
   "author": "Steven Bloch",
   "license": "ISC",
   "dependencies": {
-    "aws-sdk": "^2.778.0",
-    "discord.js": "^12.3.1",
-    "emoji-regex": "^9.2.0"
+    "aws-sdk": "^2.923.0",
+    "discord.js": "^12.5.3",
+    "emoji-regex": "^9.2.2"
   }
 }
