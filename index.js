@@ -371,11 +371,15 @@ discordClient.on('message', message => {
                     responseMessage += `---------------------------`;
                 }
                 if (responseMessage) {
-                    message.channel.send(responseMessage);
+                    message.channel.send(responseMessage).catch(err => {
+                        console.error(err);
+                    });
                 }
             }
         });
-        message.delete();
+        message.delete().catch(err => {
+            console.error(err);
+        });
     }
     else if (message && message.guild && message.guild.id && message.content && message.channel && message.channel.id && message.content.toLowerCase().trim() === '!reacts users received') {
         let params = {
@@ -411,11 +415,15 @@ discordClient.on('message', message => {
                     responseMessage += `---------------------------`;
                 }
                 if (responseMessage) {
-                    message.channel.send(responseMessage);
+                    message.channel.send(responseMessage).catch(err => {
+                        console.error(err);
+                    });
                 }
             }
         });
-        message.delete();
+        message.delete().catch(err => {
+            console.error(err);
+        });
     }
     else if (message && message.guild && message.guild.id && message.content && message.channel && message.channel.id && message.content.toLowerCase().trim() === '!reacts emojis') {
         let params = {
@@ -456,11 +464,15 @@ discordClient.on('message', message => {
                     responseMessage += `---------------------------`;
                 }
                 if (responseMessage) {
-                    message.channel.send(responseMessage);
+                    message.channel.send(responseMessage).catch(err => {
+                        console.error(err);
+                    });
                 }
             }
         });
-        message.delete();
+        message.delete().catch(err => {
+            console.error(err);
+        });
     }
     else if (message && message.guild && message.guild.id && message.content && message.channel && message.channel.id && message.content.toLowerCase().startsWith('!reacts')) {
         if (message.mentions && message.mentions.users && message.mentions.users.first() && !message.content.trim().endsWith('received')) {
@@ -502,11 +514,15 @@ discordClient.on('message', message => {
                         responseMessage += `---------------------------`;
                     }
                     if (responseMessage) {
-                        message.channel.send(responseMessage);
+                        message.channel.send(responseMessage).catch(err => {
+                            console.error(err);
+                        });
                     }
                 }
             });
-            message.delete();
+            message.delete().catch(err => {
+                console.error(err);
+            });
         }
         else if (message.mentions && message.mentions.users && message.mentions.users.first() && message.content.trim().endsWith('received')) {
             let params = {
@@ -547,11 +563,15 @@ discordClient.on('message', message => {
                         responseMessage += `---------------------------`;
                     }
                     if (responseMessage) {
-                        message.channel.send(responseMessage);
+                        message.channel.send(responseMessage).catch(err => {
+                            console.error(err);
+                        });
                     }
                 }
             });
-            message.delete();
+            message.delete().catch(err => {
+                console.error(err);
+            });
         }
         else if ((message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/) || emojiRegexRGI().exec(message.content)) && !message.content.trim().endsWith('received')) {
             let customEmoji;
@@ -603,11 +623,15 @@ discordClient.on('message', message => {
                         responseMessage += `---------------------------`;
                     }
                     if (responseMessage) {
-                        message.channel.send(responseMessage);
+                        message.channel.send(responseMessage).catch(err => {
+                            console.error(err);
+                        });
                     }
                 }
             });
-            message.delete();
+            message.delete().catch(err => {
+                console.error(err);
+            });
         }
         else if ((message.content.match(/<a:.+?:\d+>|<:.+?:\d+>/) || emojiRegexRGI().exec(message.content)) && message.content.trim().endsWith('received')) {
             let customEmoji;
@@ -659,11 +683,15 @@ discordClient.on('message', message => {
                         responseMessage += `---------------------------`;
                     }
                     if (responseMessage) {
-                        message.channel.send(responseMessage);
+                        message.channel.send(responseMessage).catch(err => {
+                            console.error(err);
+                        });
                     }
                 }
             });
-            message.delete();
+            message.delete().catch(err => {
+                console.error(err);
+            });
         }
         else {
             let responseMessage = `Welcome to the ${message.guild.name} react leaderboard!\n`;
@@ -675,8 +703,12 @@ discordClient.on('message', message => {
             responseMessage += `\`!reacts @userName received\` will show the most commonly received emojis for a specific user\n`;
             responseMessage += `\`!reacts :emojiname:\` will show the users that react with a specific emoji most often\n`;
             responseMessage += `\`!reacts :emojiname: received\` will show the users that receive reacts with a specific emoji most often\n`;
-            message.author.send(responseMessage);
-            message.delete();
+            message.author.send(responseMessage).catch(err => {
+                console.error(err);
+            });
+            message.delete().catch(err => {
+                console.error(err);
+            });
         }
     }
 });
