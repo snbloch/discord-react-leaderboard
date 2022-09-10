@@ -9,7 +9,7 @@ var credentials = new AWS.SharedIniFileCredentials({profile: config.awsProfileNa
 AWS.config.credentials = credentials;
 AWS.config.region = config.awsRegion;
 const dynamo = new AWS.DynamoDB.DocumentClient();
-const emojiRegexRGI = require('emoji-regex/RGI_Emoji.js');
+const emojiRegexRGI = require('emoji-regex');
 
 const PAGE_SIZE = 10;
 const MAX_PAGES = 1;
