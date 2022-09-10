@@ -1,7 +1,7 @@
 var AWS = require('aws-sdk');
 const { Client, Intents } = require('discord.js');
 const config = require('./config.json');
-const discordClient = new Client({ intents: [Intents.NON_PRIVILEGED, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS] });
+const discordClient = new Client({ intents: [Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS] });
 var credentials = new AWS.SharedIniFileCredentials({profile: config.awsProfileName});
 AWS.config.credentials = credentials;
 AWS.config.region = config.awsRegion;
