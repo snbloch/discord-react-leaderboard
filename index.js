@@ -1,5 +1,5 @@
 var AWS = require('aws-sdk');
-const Discord = require('discord.js');
+const { Discord, Intents } = require('discord.js');
 const config = require('./config.json');
 const discordClient = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 var credentials = new AWS.SharedIniFileCredentials({profile: config.awsProfileName});
